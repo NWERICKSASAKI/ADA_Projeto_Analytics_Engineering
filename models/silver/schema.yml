@@ -1,0 +1,165 @@
+version: 2
+
+models:
+  - name: calendar_silver
+    description: "Tabela contendo a listagens de todas as casas/quartos/aparamentos"
+    columns:
+      - name: table_id
+        description: "Chave unica da tabela gerado pelo surrogate_key"
+        tests:
+          - unique
+      - name: house_id
+        description: "ID da casa/quarto/apartamento/hotel"
+        tests:
+          - not_null
+      - name: date
+        description: "Data"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: date
+      - name: available
+        description: "Disponibilidade em boolean"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1,0] 
+      - name: price	
+        description: "Nome do bairro"
+        tests:
+          - not_null
+      - name: adjusted_price	
+        description: "Tipo de quarto"
+        tests:
+          - not_null
+      - name: minimum_nights	
+        description: "Preco da estadia"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1  # (Optional)
+              max_value: 365 # (Optional)
+              strictly: false # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+      - name: maximum_nights	
+        description: "Quantidade mínima de noites"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0  # (Optional)
+              max_value: 1125 # (Optional)
+              strictly: false # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+
+
+  - name: listings_silver
+    description: "Tabela contendo a listagens de todas as casas/quartos/aparamentos"
+    columns:
+      - name: table_id
+        description: "Chave unica da tabela gerado pelo surrogate_key"
+        tests:
+          - unique
+      - name: house_id
+        description: "ID da casa/quarto/apartamento/hotel"
+        tests:
+          - not_null
+          - unique
+      - name: host_id
+        description: "ID do responsável da casa/quarto/apartamento/hotel"
+        tests:
+          - not_null
+      - name: host_name
+        description: "Nome do responsável da casa/quarto/apartamento/hotel"
+        tests:
+          - not_null
+      - name: neighbourhood	
+        description: "Nome do bairro"
+        tests:
+          - not_null
+      - name: room_type	
+        description: "Tipo de quarto"
+        tests:
+          - not_null
+      - name: price	
+        description: "Preco da estadia"
+        tests:
+          - not_null
+      - name: minimum_nights	
+        description: "Quantidade mínima de noites"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1  # (Optional)
+              max_value: 365 # (Optional)
+              strictly: false # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+      - name: number_of_reviews	
+        description: "Número de comentários e avaliações"
+        tests:
+          - not_null
+      - name: reviews_per_month
+        description: "Quantidade de avaliações por mês"
+        tests:
+          - not_null
+      - name: availability_365
+        description: "Quantidade de dias disponíveis no ano"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0  # (Optional)
+              max_value: 365 # (Optional)
+              strictly: false # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+      - name: number_of_reviews_ltm
+        description: "Número de avaliações nos últimos 12 meses"
+        tests:
+          - not_null
+      - name: tipo
+        description: "Tipo de hospedagen"
+        tests:
+          - not_null
+      - name: nota
+        description: "Valor da nota atribuida entre 0 a 5"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0  # (Optional)
+              max_value: 5 # (Optional)
+              strictly: false # (Optional. Default is 'false'. Adds an 'or equal to' to the comparison operator for min/max)
+      - name: qtd_quartos
+        description: "Quantidade de quartos"
+      - name: qtd_camas
+        description: "Quantidade de camas"
+      - name: banheiro
+        description: "Quantidade e tipo de banheiro"
+
+
+  - name: reviews_silver
+    description: "Tabela contendo a listagens de todas as casas/quartos/aparamentos"
+    columns:
+      - name: table_id
+        description: "Chave unica da tabela gerado pelo surrogate_key"
+        tests:
+          - unique
+      - name: house_id
+        description: "ID da casa/quarto/apartamento/hotel"
+        tests:
+          - not_null
+      - name: review_id
+        description: "ID da review"
+        tests:
+          - not_null
+      - name: date
+        description: "Data que foi realizado a review"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              column_type: date
+      - name: reviewer_id	
+        description: "ID do cliente"
+        tests:
+          - not_null
+      - name: reviewer_name	
+        description: "Nome do cliente"
+        tests:
+          - not_null
+      - name: comments	
+        description: "Comentario do cliente referente a estadia"
+        tests:
+          - not_null
